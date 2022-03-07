@@ -14,28 +14,47 @@ class V1::ContactsController < ApplicationController
     end
 
     def destroy
-      @contact = Contact.find(params[:id])
-      if @contact.destroy
-        render json: {status: "SUCCESS", message: "Deleted contact", data: @contact}, status: :ok 
-      else
-        render json: {status: "ERROR", message: "Error deleting contact", data: @contact.erros}, status: :ok 
+      begin  
+        @contact = Contact.find(params[:id])
+        if @contact.destroy
+          render json: {status: "SUCCESS", message: "Deleted contact", data: @contact}, status: :ok 
+        else
+          render json: {status: "ERROR", message: "Error deleting contact", data: @contact.erros}, status: :ok 
+        end
+      rescue => exception
+        render json: { status: "ERROR", message: "Contact Contact", data: @contact}, status: 404 
       end
     end
 
     def update 
-    end
-
-    def show 
-      @contact = Contact.find(params[:id])
-      debugger
-      if @contact
-        render json: { status: "SUCCESS", message: "Loaded Contact", data: @contact}, status: :ok
-      else  
-        render json: { status: "ERROR", message: "Contact not found", data: @contact}, status: :ok
+      begin
+        @contact = Contact.find(params[:id])
+        if @contact.update(contact_params)
+          render json:{status: "SUCCESS", message: "Updated Successfully", data: @contact}, status: :ok
+        else
+          render json: {status: "ERROR", message: "Error to update contact", data: @contact.erros}, status: :ok     
+        end
+      rescue => exception
+        render json: { status: "ERROR", message: "Contact Contact", data: @contact}, status: 404 
       end
     end
 
+    def show 
+        begin
+          @contact = Contact.find(params[:id])
+        
+          if @contact
+            render json: { status: "SUCCESS", message: "Loaded Contact", data: @contact}, status: :ok
+          end  
+            
+        rescue => exception
+          render json: { status: "ERROR", message: "Contact Contact", data: @contact}, status: 404  
+        end
+              
+    end
+
     private 
+        
         def contact_params
           params.require(:contact).permit(:first_name, :last_name, :email)
         end
