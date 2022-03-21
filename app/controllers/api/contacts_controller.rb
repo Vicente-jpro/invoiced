@@ -1,4 +1,4 @@
-class V1::ContactsController < ApplicationController
+class Api::ContactsController < ApplicationController
     def index 
       @contacts = Contact.order("created_at DESC")
       render json: @contacts, status: :ok
