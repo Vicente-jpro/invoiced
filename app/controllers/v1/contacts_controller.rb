@@ -1,15 +1,15 @@
 class V1::ContactsController < ApplicationController
     def index 
       @contacts = Contact.order("created_at DESC")
-      render json: { status: "SUCCESS", message: "Loaded Contacts", data: @contacts}, status: :ok
+      render json: @contacts, status: :ok
     end
 
     def create 
       @contact = Contact.new(contact_params)
       if @contact.save
-        render json:{status: "SUCCESS", message: "Created Successfully", data: @contact}, status: :ok
+        render json: @contact, status: :ok
       else  
-        render json: {status: "ERROR", message: "Error to create a contact", data: @contact.errors}, status: :unprocessable_entity 
+        render json: @contact.errors, status: :unprocessable_entity 
       end
     end
 
@@ -17,12 +17,12 @@ class V1::ContactsController < ApplicationController
       begin  
         @contact = Contact.find(params[:id])
         if @contact.destroy
-          render json: {status: "SUCCESS", message: "Deleted contact", data: @contact}, status: :ok 
+          render json: @contact, status: :ok 
         else
-          render json: {status: "ERROR", message: "Error deleting contact", data: @contact.erros}, status: :ok 
+          render json: @contact.erros, status: :ok 
         end
       rescue => exception
-        render json: { status: "ERROR", message: "Contact Contact", data: @contact}, status: 404 
+        render json: { status: "ERROR", message: "Contact Contact"}, status: 404 
       end
     end
 
@@ -30,12 +30,12 @@ class V1::ContactsController < ApplicationController
       begin
         @contact = Contact.find(params[:id])
         if @contact.update(contact_params)
-          render json:{status: "SUCCESS", message: "Updated Successfully", data: @contact}, status: :ok
+          render json: @contact, status: :ok
         else
-          render json: {status: "ERROR", message: "Error to update contact", data: @contact.erros}, status: :ok     
+          render json: @contact.erros, status: :ok     
         end
       rescue => exception
-        render json: { status: "ERROR", message: "Contact Contact", data: @contact}, status: 404 
+        render json: @contact, status: 404 
       end
     end
 
@@ -44,11 +44,11 @@ class V1::ContactsController < ApplicationController
           @contact = Contact.find(params[:id])
         
           if @contact
-            render json: { status: "SUCCESS", message: "Loaded Contact", data: @contact}, status: :ok
+            render json: @contact , status: :ok
           end  
             
         rescue => exception
-          render json: { status: "ERROR", message: "Contact Contact", data: @contact}, status: 404  
+          render json: @contact, status: 404  
         end
               
     end
