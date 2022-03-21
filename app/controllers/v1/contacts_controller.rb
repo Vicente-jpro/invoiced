@@ -22,7 +22,7 @@ class V1::ContactsController < ApplicationController
           render json: @contact.erros, status: :ok 
         end
       rescue => exception
-        render json: { status: "ERROR", message: "Contact Contact"}, status: 404 
+        render json: { status: "ERROR", message: "Contact do not exist"}, status: 404 
       end
     end
 
