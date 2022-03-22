@@ -1,13 +1,24 @@
 class Api::ContactsController < ApplicationController
     def index 
-      @contacts = Contact.order("created_at DESC")
+      @contacts = Contact.order_by_created_at_desc
       render json: @contacts, status: :ok
+    end
+
+    def search 
+      @contacts = Contact.search_all_by_first_name(params[:key])
+      debugger
+      if @contacts
+        render json: @contacts, status: :ok
+      else 
+        render json: {message: "Name not found"}, status: :ok
+      end
+
     end
 
     def create 
       @contact = Contact.new(contact_params)
-      if @contact.save
-        render json: @contact, status: :ok
+      if @contact.save 
+        render json: @contact, status: :ok, location: api_contacts_url(@contact) 
       else  
         render json: @contact.errors, status: :unprocessable_entity 
       end
